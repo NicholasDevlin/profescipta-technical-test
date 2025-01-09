@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/nicholas/projects/sales order/sales order/sales order.csproj": {}
+    "/Users/nicholas/projects/profescipta-technical-test/sales order/sales order.csproj": {}
   },
   "projects": {
-    "/Users/nicholas/projects/sales order/sales order/sales order.csproj": {
+    "/Users/nicholas/projects/profescipta-technical-test/sales order/sales order.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/nicholas/projects/sales order/sales order/sales order.csproj",
+        "projectUniqueName": "/Users/nicholas/projects/profescipta-technical-test/sales order/sales order.csproj",
         "projectName": "sales order",
-        "projectPath": "/Users/nicholas/projects/sales order/sales order/sales order.csproj",
+        "projectPath": "/Users/nicholas/projects/profescipta-technical-test/sales order/sales order.csproj",
         "packagesPath": "/Users/nicholas/.nuget/packages/",
-        "outputPath": "/Users/nicholas/projects/sales order/sales order/obj/",
+        "outputPath": "/Users/nicholas/projects/profescipta-technical-test/sales order/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/nicholas/.nuget/NuGet/NuGet.Config"
@@ -21,7 +21,6 @@
         ],
         "sources": {
           "/usr/local/share/dotnet/library-packs": {},
-          "/usr/local/share/dotnet/sdk/7.0.317/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -34,11 +33,43 @@
           "warnAsError": [
             "NU1605"
           ]
-        }
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.2.2, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.20, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[7.0.20, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -58,7 +89,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.317/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/RuntimeIdentifierGraph.json"
         }
       }
     }

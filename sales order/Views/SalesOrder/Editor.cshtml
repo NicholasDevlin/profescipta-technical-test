@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    .information {
+        background-color: #002A5C;
+        width: 100vw;
+    }
+</style>
+
+<div>
+    <div class="d-flex justify-content-center text-light fs-5 information py-1">
+        Sales Order Information
+    </div>
+    <div class="container">
+        <div class="row mt-2">
+            <div class="col label">
+                Sales Order Number
+            </div>
+            <div class="col">
+                <input id="" class="w-100" type="text" disabled />
+            </div>
+            <div class="col label">
+                Customer
+            </div>
+            <div class="col">
+                <select id="" class="js-example-responsive" name="state" style="width: 100%">
+                    <option value="AL">Alabama</option>
+                    <option value="WY">Wyoming</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col label">
+                Order Date
+            </div>
+            <div class="col">
+                <input id="" class="w-100" type="date" />
+            </div>
+            <div class="col label">
+                Address
+            </div>
+            <div class="col">
+                <textarea class="w-100" id="address" rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center text-light fs-5 information py-1">
+        Detail Item Information
+    </div>
+    <div class="container">
+        <button class="btn btn-danger mt-2">
+            Add Item
+        </button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.js-example-responsive').select2();
+    });
+</script>

@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <div class="card bg-transparent d-flex flex-column">
+        <div class="d-flex justify-content-around px-3 py-3">
+            <div>Keywords</div>
+            <div>
+                <input type="text" placeholder="Input here" />
+            </div>
+            <div>Order Date</div>
+            <div class="d-flex flex-column">
+                <input type="date" />
+                <button class="mt-2 btn btn-primary">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2">
+        <div>
+            <a asp-controller="SalesOrder" asp-action="Editor" class="btn btn-danger me-2">Add New Data</a>
+            <button class="btn btn-success">Export to excel</button>
+        </div>
+        <table id="so" class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Action</th>
+                    <th>Sales Order</th>
+                    <th>Order Date</th>
+                    <th>Customer</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                <tr>
+                    <td>a</td>
+                    <td>
+                        <a href="#" class="text-dark text-decoration-none" data-bs-toggle="tooltip" data-bs-title="Edit">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </a>
+                        <ion-icon data-bs-toggle="tooltip" data-bs-title="Delete" name="trash-outline"></ion-icon>
+                    </td>
+                    <td>a</td>
+                    <td>b</td>
+                    <td>a</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var table = new DataTable('#so', {
+            ordering: false,
+            searching: false,
+            lengthChange: false
+        });
+
+        table.on('page', function () {
+            var pageInfo = table.page.info();
+            console.log('Current Page: ', pageInfo.page);
+
+            var data = table.rows({ page: 'current' }).data();
+            console.log('Current Page Data:', Array.from(data));
+        });
+    });
+</script>
+
