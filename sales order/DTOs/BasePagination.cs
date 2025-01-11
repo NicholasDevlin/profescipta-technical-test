@@ -5,6 +5,7 @@ namespace sales_order.DTOs
 	{
         public int? currentPage { get; set; }
         public int? pageSize { get; set; }
+        public bool? takeAll { get; set; } = false;
     }
 }
 

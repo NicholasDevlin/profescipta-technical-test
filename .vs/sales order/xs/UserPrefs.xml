@@ -1,20 +1,58 @@
-﻿<Properties StartupConfiguration="{BBD28504-9650-47F6-B2CC-10E7BCA97DBF}|https">
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{BBD28504-9650-47F6-B2CC-10E7BCA97DBF}|https" GitUserInfo="UsingMD">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <Debugger.DebugSourceFolders />
+  <MonoDevelop.Ide.Workbench ActiveDocument="sales order/Views/SalesOrder/Editor.cshtml">
+    <Files>
+      <File FileName="../../../../usr/local/share/dotnet/sdk/7.0.317/Microsoft.Common.CurrentVersion.targets" Line="4752" Column="5" IsPinned="True" />
+      <File FileName="sales order/appsettings.json" />
+      <File FileName="sales order/Models/ErrorViewModel.cs" />
+      <File FileName="sales order/Controllers/HomeController.cs" />
+      <File FileName="sales order/Views/Home/Index.cshtml" />
+      <File FileName="sales order/Program.cs" />
+      <File FileName="sales order/Config/ApplicationDBContext.cs" />
+      <File FileName="sales order/Models/Customer.cs" />
+      <File FileName="sales order/Views/SalesOrder/Index.cshtml" />
+      <File FileName="sales order/Controllers/SalesOrderController.cs" Line="44" Column="1" />
+      <File FileName="sales order/Views/Home/Privacy.cshtml" />
+      <File FileName="sales order/DTOs/CustomerDto.cs" />
+      <File FileName="sales order/DTOs/BasePaginationResult.cs" />
+      <File FileName="sales order/Views/Shared/_ValidationScriptsPartial.cshtml" />
+      <File FileName="sales order/Views/SalesOrder/Editor.cshtml" Line="87" Column="9" />
+      <File FileName="sales order/Views/Shared/_Layout.cshtml" Line="52" Column="33" />
+      <File FileName="README.md" />
+      <File FileName=".vs/sales order/xs/UserPrefs.xml" />
+      <File FileName="sales order/DTOs/SalesOrderDto.cs" />
+      <File FileName="sales order/Controllers/CustomerController.cs" />
+      <File FileName="sales order/Service/SalesOrderService.cs" />
+      <File FileName="sales order/Interface/ISalesOrderService.cs" />
+      <File FileName="sales order/Interface/ICustomerService.cs" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="sales order" expanded="True" selected="True">
-            <Node name="sales order" expanded="True" />
+          <Node name="sales order" expanded="True">
+            <Node name="sales order">
+              <Node name="Controllers" expanded="True" />
+              <Node name="DTOs" expanded="True" />
+              <Node name="Interface" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="SalesOrder" expanded="True">
+                  <Node name="Editor.cshtml" selected="True" />
+                </Node>
+                <Node name="Shared" expanded="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/nicholas/projects/profescipta-technical-test/sales order/Controllers/CustomerController.cs" relfile="sales order/Controllers/CustomerController.cs" line="33" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.ItemProperties.sales_220order FirstBuild="True" PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.sales_220order PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
 </Properties>

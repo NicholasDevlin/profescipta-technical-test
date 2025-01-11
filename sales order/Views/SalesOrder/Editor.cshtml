@@ -1,6 +1,9 @@
-﻿@{
+﻿@using sales_order.DTOs;
+@{
     ViewData["Title"] = "Edit";
+    var customers = ViewBag.Customers.Data as List<CustomerDto>;
 }
+@model SalesOrderDto
 
 <style>
     .information {
@@ -19,15 +22,17 @@
                 Sales Order Number
             </div>
             <div class="col">
-                <input id="" class="w-100" type="text" disabled />
+                <input id="order-no" class="w-100" type="text" value="@Model.OrderNo" />
             </div>
             <div class="col label">
                 Customer
             </div>
             <div class="col">
-                <select id="" class="js-example-responsive" name="state" style="width: 100%">
-                    <option value="AL">Alabama</option>
-                    <option value="WY">Wyoming</option>
+                <select id="customer-id" class="js-example-responsive" data-tags="true" data-allow-clear="true" style="width: 100%">
+                    @foreach (var customer in customers)
+                    {
+                        <option value="@customer.Id">@customer.Name</option>
+                    }
                 </select>
             </div>
         </div>
@@ -36,13 +41,13 @@
                 Order Date
             </div>
             <div class="col">
-                <input id="" class="w-100" type="date" />
+                <input id="order-date" class="w-100" type="date" value="@Model.OrderDate?.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col label">
                 Address
             </div>
             <div class="col">
-                <textarea class="w-100" id="address" rows="4"></textarea>
+                <textarea class="w-100" id="address" rows="4">@Model.Address</textarea>
             </div>
         </div>
     </div>
@@ -50,14 +55,178 @@
         Detail Item Information
     </div>
     <div class="container">
-        <button class="btn btn-danger mt-2">
+        <button class="btn btn-danger mt-2" id="addItemBtn">
             Add Item
         </button>
+        <table id="so" class="table mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>NO</th>
+                    <th>ACTION</th>
+                    <th>ITEM NAME</th>
+                    <th>QTY</th>
+                    <th>PRICE</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody class="table-light">
+                @for(var i = 0; i < (Model.Items?.Count ?? 0); i++)
+{
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <button class="btn btn-warning edit-btn" data-item-id="@Model.Items[i].Id">Edit</button>
+                                <button class="btn btn-danger delete-btn" data-item-id="@Model.Items[i].Id">Delete</button>
+                            </td>
+                            <td>@Model.Items[i].ItemName</td>
+                            <td>@Model.Items[i].Qty</td>
+                            <td>@((Model.Items[i].Price ?? 0).ToString("N0"))</td>
+                            <td>@(((Model.Items[i].Qty * Model.Items[i].Price) ?? 0).ToString("N0"))</td>
+                        </tr>
+}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-danger" id="submitBtn">
+                Save
+            </button>
+            <button class="btn btn-primary ms-3" onclick="closePage()">
+                Close
+            </button>
+        </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('.js-example-responsive').select2();
+    $(document).ready(function() {
+        var customerId = '@Model.CustomerId'; 
+
+        if (customerId) {
+            $('#customer-id').val(customerId).trigger('change');
+        } else {
+            $('#customer-id').val('').trigger('change');
+        }
     });
+</script>
+<script>
+    $(document).ready(function () {
+        let itemsData = [];
+
+        $('#addItemBtn').click(function () {
+            const newRow = `
+            <tr>
+                <td>${itemsData.length + 1}</td>
+                <td><button class="btn btn-primary save-btn">Save</button></td>
+                <td><input type="text" class="form-control item-name" placeholder="Item Name"></td>
+                <td><input type="number" class="form-control qty" placeholder="Quantity" oninput="updateTotal(this)"></td>
+                <td><input type="number" class="form-control price" placeholder="Price" oninput="updateTotal(this)"></td>
+                <td><input type="text" class="form-control total" placeholder="Total" readonly></td>
+            </tr>
+        `;
+            $('#so tbody').append(newRow);
+        });
+
+        window.updateTotal = function (input) {
+            const row = $(input).closest('tr');
+            const qty = parseFloat(row.find('.qty').val()) || 0;
+            const price = parseFloat(row.find('.price').val()) || 0;
+            const total = qty * price;
+
+            const formattedTotal = total.toLocaleString();
+
+            row.find('.total').val(formattedTotal);
+        }
+
+        $(document).on('click', '.save-btn', function () {
+            const row = $(this).closest('tr');
+            const itemName = row.find('.item-name').val();
+            const itemId = $(this).data('item-id');
+            const qty = parseFloat(row.find('.qty').val());
+            const price = parseFloat(row.find('.price').val());
+            const total = row.find('.total').val();
+
+            row.find('.item-name').replaceWith(`<td>${itemName}</td>`);
+            row.find('.qty').replaceWith(`<td>${qty}</td>`);
+            row.find('.price').replaceWith(`<td>${price.toLocaleString()}</td>`);
+            row.find('.total').replaceWith(`<td>${total.toLocaleString()}</td>`);
+
+            $(this).replaceWith(`
+            <button class="btn btn-warning edit-btn">Edit</button>
+            <button class="btn btn-danger delete-btn">Delete</button>
+        `);
+
+            itemsData.push({
+                itemName: itemName,
+                qty: qty,
+                price: price,
+                total: total,
+                id: itemId
+            });
+
+            updateRowNumbers();
+        });
+
+        $(document).on('click', '.edit-btn', function () {
+            const row = $(this).closest('tr');
+            const itemId = $(this).data('item-id') || null;
+            const itemName = row.find('td').eq(2).text();
+            const qty = row.find('td').eq(3).text();
+            const price = parseFloat(row.find('td').eq(4).text().replace(',', ''));
+            const total = row.find('td').eq(5).text();
+            
+            row.find('td').eq(2).replaceWith(`<td><input type="text" class="form-control item-name" value="${itemName}"></td>`);
+            row.find('td').eq(3).replaceWith(`<td><input type="number" class="form-control qty" value="${qty}" oninput="updateTotal(this)"></td>`);
+            row.find('td').eq(4).replaceWith(`<td><input type="number" class="form-control price" value="${price}" oninput="updateTotal(this)"></td>`);
+            row.find('td').eq(5).replaceWith(`<td><input type="text" class="form-control total" value="${total}" readonly></td>`);
+
+            $(this).replaceWith(`<button data-item-id="${itemId}" class="btn btn-primary save-btn">Save</button>`);
+            row.find('.delete-btn').remove();
+        });
+
+        $(document).on('click', '.delete-btn', function () {
+            const rowIndex = $(this).closest('tr').index();
+            //itemsData.splice(rowIndex, 1);
+            const itemId = $(this).data('item-id') || null;
+            itemsData[rowIndex].id = itemId;
+            itemsData[rowIndex].delete = true;
+            $(this).closest('tr').remove();
+            updateRowNumbers();
+        });
+
+        function updateRowNumbers() {
+            $('#so tbody tr').each(function (index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+
+    $('#submitBtn').click(function () {
+        var soId = '@Model.Id';
+        var data = {
+            id: parseInt(soId),
+            orderNo: $("#order-no").val(),
+            orderDate: $("#order-date").val(),
+            customerId: $("#customer-id").val(),
+            address: $("#address").val(),
+            items: itemsData
+        }
+
+        $.ajax({
+            url: '/SalesOrder/SaveSO',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log("Data saved successfully:", response);
+                closePage();
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        });
+    });
+
+    function closePage() {
+        history.back();
+    }
 </script>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using sales_order.Interface;
 using sales_order.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
 
 // Add DbContext with SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

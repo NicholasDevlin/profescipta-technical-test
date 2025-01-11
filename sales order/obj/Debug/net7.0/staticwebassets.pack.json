@@ -2,7 +2,7 @@
   "Files": [
     {
       "Id": "/Users/nicholas/projects/profescipta-technical-test/sales order/obj/Debug/net7.0/scopedcss/projectbundle/sales order.bundle.scp.css",
-      "PackagePath": "staticwebassets/sales order.mnspdvnatw.bundle.scp.css"
+      "PackagePath": "staticwebassets/sales order.bundle.scp.css"
     },
     {
       "Id": "/Users/nicholas/projects/profescipta-technical-test/sales order/wwwroot/css/site.css",
@@ -255,10 +255,6 @@
     {
       "Id": "obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.sales order.props",
       "PackagePath": "buildTransitive\\sales order.props"
-    },
-    {
-      "Id": "obj/Debug/net7.0/staticwebassets/msbuild.sales order.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
-      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
       "Id": "obj/Debug/net7.0/staticwebassets/msbuild.sales order.Microsoft.AspNetCore.StaticWebAssets.props",
