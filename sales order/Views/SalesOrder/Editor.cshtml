@@ -70,21 +70,33 @@
                 </tr>
             </thead>
             <tbody class="table-light">
-                @for(var i = 0; i < (Model.Items?.Count ?? 0); i++)
-{
-                        <tr>
-                            <td>@(i+1)</td>
-                            <td>
-                                <button class="btn btn-warning edit-btn" data-item-id="@Model.Items[i].Id">Edit</button>
-                                <button class="btn btn-danger delete-btn" data-item-id="@Model.Items[i].Id">Delete</button>
-                            </td>
-                            <td>@Model.Items[i].ItemName</td>
-                            <td>@Model.Items[i].Qty</td>
-                            <td>@((Model.Items[i].Price ?? 0).ToString("N0"))</td>
-                            <td>@(((Model.Items[i].Qty * Model.Items[i].Price) ?? 0).ToString("N0"))</td>
-                        </tr>
-}
+                @for (var i = 0; i < (Model.Items?.Count ?? 0); i++)
+                {
+                    <tr>
+                        <td>@(i+1)</td>
+                        <td>
+                            <button class="btn btn-warning edit-btn" data-item-id="@Model.Items[i].Id">Edit</button>
+                            <button class="btn btn-danger delete-btn" data-item-id="@Model.Items[i].Id">Delete</button>
+                        </td>
+                        <td>@Model.Items[i].ItemName</td>
+                        <td>@Model.Items[i].Qty</td>
+                        <td>@((Model.Items[i].Price ?? 0).ToString("N0"))</td>
+                        <td>@(((Model.Items[i].Qty * Model.Items[i].Price) ?? 0).ToString("N0"))</td>
+                    </tr>
+                }
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6">
+                        <div>
+                            Total Item :
+                            <span id="total-item">0</span>
+                            Total Amount :
+                            <span id="total-amount">0</span>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
         </table>
         <div class="d-flex justify-content-center">
             <button class="btn btn-danger" id="submitBtn">
@@ -122,11 +134,26 @@
                         itemName: '@item.ItemName',
                         qty: @item.Qty,
                         price: @item.Price,
-                        total: @item.Qty * @item.Price
+                        total: @item.Qty * @item.Price,
+                        delete: false
                     });
+                    calculateTotal();
                 </text>
             }
-            </text>
+        </text>
+        }
+
+        function calculateTotal() {
+            var totalAmount = 0;
+            var totalItem = 0;
+            const filteredItems = itemsData.filter((x) => x.delete !== true);
+
+            filteredItems.forEach((x) => {
+                totalAmount += parseFloat(x.total.toLocaleString().replace(",", ''));
+                totalItem += x.qty;
+            })
+            $('#total-item').text(totalItem.toLocaleString());
+            $('#total-amount').text(totalAmount.toLocaleString());
         }
 
         $('#addItemBtn').click(function () {
@@ -166,7 +193,6 @@
             row.find('.qty').replaceWith(`<td>${qty}</td>`);
             row.find('.price').replaceWith(`<td>${price.toLocaleString()}</td>`);
             row.find('.total').replaceWith(`<td>${total.toLocaleString()}</td>`);
-
             $(this).replaceWith(`
             <button class="btn btn-warning edit-btn">Edit</button>
             <button class="btn btn-danger delete-btn">Delete</button>
@@ -177,9 +203,10 @@
                 qty: qty,
                 price: price,
                 total: total,
-                id: itemId
+                id: itemId,
+                delete: false
             });
-
+            calculateTotal();
             updateRowNumbers();
         });
 
@@ -203,10 +230,10 @@
         $(document).on('click', '.delete-btn', function () {
             const rowIndex = $(this).closest('tr').index();
             //itemsData.splice(rowIndex, 1);
-            debugger
             const itemId = $(this).data('item-id') || null;
             itemsData[rowIndex].id = itemId;
             itemsData[rowIndex].delete = true;
+            calculateTotal();
             $(this).closest('tr').remove();
             updateRowNumbers();
         });
@@ -234,17 +261,19 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function (response) {
-                console.log("Data saved successfully:", response);
-                closePage();
+                showBootstrapAlert(response.message, 'success');
+                setTimeout(() => {
+                    closePage();
+                }, 1000);
             },
             error: function (xhr, status, error) {
-
+                showBootstrapAlert(error, 'danger');
             }
         });
         });
     });
 
     function closePage() {
-        history.back();
+        window.location.href = '/SalesOrder/Index';
     }
 </script>

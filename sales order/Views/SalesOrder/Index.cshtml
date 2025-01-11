@@ -19,7 +19,7 @@
     <div class="mt-2">
         <div>
             <a asp-controller="SalesOrder" asp-action="Editor" class="btn btn-danger me-2">Add New Data</a>
-            <button class="btn btn-success">Export to excel</button>
+            <button class="btn btn-success" onclick="exportJsonToExcel()"><ion-icon class="me-2" name="document-outline"></ion-icon>Export to excel</button>
         </div>
         <table id="so" class="table">
             <thead class="table-dark">
@@ -32,6 +32,8 @@
                 </tr>
             </thead>
             <tbody class="table-light">
+                @*@for(var i = 0; i < Model.Count; i++)
+{
                 <tr>
                     <td>(i+1)</td>
                     <td>
@@ -44,16 +46,32 @@
                     <td>Model[i].OrderDate.Value.ToString("dd/MM/yyyy")</td>
                     <td>Model[i].Address</td>
                 </tr>
-                @*@for(var i = 0; i < Model.Count; i++)
-{
 }*@
             </tbody>
         </table>
     </div>
 </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Warning!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this Sales Order?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="deleteConfirmBtn">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    var table;
+    let table, itemIdToDelete = null;
+
     document.addEventListener('DOMContentLoaded', function () {
         table = new DataTable('#so', {
             ordering: false,
@@ -78,7 +96,7 @@
                             data: responseData.items 
                         });
                     })
-                    .catch(error => console.error('Error fetching data:', error));
+                    .catch(error => showBootstrapAlert(error, 'danger'));
             },
             columns: [
                 {
@@ -92,7 +110,7 @@
                     render: function (data, type, row) {
                         return `
                         <a class="btn" href="/SalesOrder/Editor/${data}" data-bs-toggle="tooltip" data-bs-title="Edit"><ion-icon name="create-outline"></ion-icon></a>
-                        <a class="btn" data-item-id="${data}" data-bs-toggle="tooltip" data-bs-title="Delete" onclick="deleteSalesOrder(${data})"><ion-icon name="trash-outline"></ion-icon></a>
+                        <a class="btn" data-item-id="${data}" data-bs-toggle="modal" data-bs-target="#deleteModal"><ion-icon name="trash-outline"></ion-icon></a>
                     `;
                     }
                 },
@@ -121,30 +139,64 @@
 
         table.on('page', function () {
             var pageInfo = table.page.info();
-            console.log('Current Page: ', pageInfo.page);
             var data = table.rows({ page: 'current' }).data();
-            console.log('Current Page Data:', Array.from(data));
         });
     });
 
+    $(document).on('click', 'a[data-bs-toggle="modal"]', function () {
+        itemIdToDelete = $(this).data('item-id');
+    });
+
+    $('#deleteConfirmBtn').on('click', function () {
+        if (itemIdToDelete) {
+            deleteSalesOrder(itemIdToDelete);
+            itemIdToDelete = null;
+            $('#deleteModal').modal('hide');
+        }
+    });
+
     function deleteSalesOrder(id) {
-        if (confirm('Are you sure you want to delete this sales order?')) {
-            fetch(`/SalesOrder/DeleteSO/${id}`, {
-                method: 'DELETE',
+        fetch(`/SalesOrder/DeleteSO/${id}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(data => {
+                showBootstrapAlert(data.message, 'success');
+                table.ajax.reload();
             })
-                .then(response => response.json())
-                .then(data => {
-                    debugger
-                    alert(data.message); 
-                    table.ajax.reload();
-                    //const row = document.querySelector(`a[data-item-id="${id}"]`).closest('tr');
-                    //row.remove();
-                })
-                .catch(error => {
-                    alert('There was an error deleting the sales order.');
-                    console.error('Error:', error);
-                });
+            .catch(error => {
+                showBootstrapAlert(error, 'danger');
+            });
+    }
+
+    async function exportJsonToExcel() {
+        try {
+            const response = await fetch('/SalesOrder/getSalesOrder');
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const jsonData = await response.json();
+
+            if (!jsonData || !jsonData.items) {
+                throw new Error('Invalid data format');
+            }
+
+            const datas = jsonData.items.map(item => ({
+                "Sales Order": item.orderNo,
+                "Order Date": item.orderDate,
+                "Customer Name": item.customerName,
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(datas);
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+            XLSX.writeFile(wb, "so.xlsx");
+        } catch (err) {
+            showBootstrapAlert('There was an error exporting the data. Please try again.', 'danger');
         }
     }
+
 </script>
 
