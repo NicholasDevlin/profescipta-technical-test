@@ -87,7 +87,11 @@ namespace sales_order.Service
                             itemDto.SOId = salesOrder.SO_ORDER_ID;
                             if (itemDto.Delete == true)
                             {
-                                if (itemDto.Id != 0 && itemDto.Id != null) _context.SO_ITEM.FirstOrDefault(x => x.SO_ITEM_ID == itemDto.Id);
+                                if (itemDto.Id != 0 && itemDto.Id != null)
+                                {
+                                    var item = _context.SO_ITEM.FirstOrDefault(x => x.SO_ITEM_ID == itemDto.Id);
+                                    if (item != null) _context.SO_ITEM.Remove(item);
+                                }
                                 continue;
                             }
 

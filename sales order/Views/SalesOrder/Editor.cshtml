@@ -111,6 +111,23 @@
 <script>
     $(document).ready(function () {
         let itemsData = [];
+        @if (Model.Items != null)
+        {
+            <text>
+                @foreach (var item in Model.Items)
+            {
+                <text>
+                    itemsData.push({
+                        id: @item.Id,
+                        itemName: '@item.ItemName',
+                        qty: @item.Qty,
+                        price: @item.Price,
+                        total: @item.Qty * @item.Price
+                    });
+                </text>
+            }
+            </text>
+        }
 
         $('#addItemBtn').click(function () {
             const newRow = `
@@ -173,7 +190,7 @@
             const qty = row.find('td').eq(3).text();
             const price = parseFloat(row.find('td').eq(4).text().replace(',', ''));
             const total = row.find('td').eq(5).text();
-            
+
             row.find('td').eq(2).replaceWith(`<td><input type="text" class="form-control item-name" value="${itemName}"></td>`);
             row.find('td').eq(3).replaceWith(`<td><input type="number" class="form-control qty" value="${qty}" oninput="updateTotal(this)"></td>`);
             row.find('td').eq(4).replaceWith(`<td><input type="number" class="form-control price" value="${price}" oninput="updateTotal(this)"></td>`);
@@ -186,6 +203,7 @@
         $(document).on('click', '.delete-btn', function () {
             const rowIndex = $(this).closest('tr').index();
             //itemsData.splice(rowIndex, 1);
+            debugger
             const itemId = $(this).data('item-id') || null;
             itemsData[rowIndex].id = itemId;
             itemsData[rowIndex].delete = true;

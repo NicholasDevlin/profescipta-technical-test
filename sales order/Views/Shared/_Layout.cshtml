@@ -44,7 +44,8 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-2.2.0/datatables.min.js"></script>
-    <script>const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
         $(document).ready(function () {
             $('.js-example-responsive').select2({
